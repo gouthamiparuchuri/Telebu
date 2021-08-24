@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { CookieModule } from 'ngx-cookie';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,9 +37,16 @@ import { AuthGuard } from './guards/auth.guard';
     BrowserAnimationsModule,
     ToastrModule.forRoot({ preventDuplicates: true}),
     CookieModule.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DeviceDetectorService,
+    
   ],
-  providers: [AuthGuard],
+  providers: [
+    AuthGuard,
+    {
+      provide: DeviceDetectorService
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
