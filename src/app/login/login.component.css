@@ -1,0 +1,19 @@
+.login{
+    margin-top: 160px
+}
+
+.valid{
+    border: 2px solid royalblue; 
+}
+
+.invalid{
+    border: 2px solid red;
+}
+
+.tenantList{
+    margin-bottom: 10px;
+    background-color: #eef3ff;
+    border: 1px solid #dde6fb;
+    padding: 10px 15px;
+    cursor: pointer;
+}

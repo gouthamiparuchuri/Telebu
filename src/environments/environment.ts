@@ -3,7 +3,22 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  isAllow: true,
+  production: false,
+
+  url: 'https://chat-ping.telebu.com',
+  appId: '5fbbc376f33be87b5cd2abbe', //live
+  appPwd: 'bewgnip2020', //live
+
+  // url: 'http://192.168.75.88:3323',
+  // appId: '5fb4c83e8131e84082074fd3', //local
+  // appPwd: 'pingweb', //local
+  // url: 'http://192.168.73.182:3323',
+
+  // url: 'http://staging-ping.telebu.com',
+  // appId: '60fe5aeb88557e2e2d7ee746',
+  // appPwd: 'pingweb',
+
 };
 
 /*

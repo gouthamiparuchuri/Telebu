@@ -1,0 +1,84 @@
+<div class="container login">
+    <div class="row mt-5">
+        <div class="col-md-4 m-auto form text-center border bg-dark text-white">
+
+            <h3 class="text-primary mt-5 mb-5">{{title}}</h3>
+
+            <form *ngIf="loginScreen" #loginForm="ngForm">
+                <div class="form-group col-sm-10 m-auto">
+                    <div class="input-group mb-3">
+                        <input class="w-25" placeholder="Country Code" required name="countryCode"
+                            [(ngModel)]="user['CountryCode']" #countryCode="ngModel">
+                        <input type="number" class="form-control" id="number" placeholder="Mobile Number"
+                            [ngClass]="(number.invalid && (number.dirty || number.touched)) ? 'invalid':'valid'"
+                            required name="number" [(ngModel)]="user['PhNumber']" #number="ngModel">
+                    </div>
+                </div>
+                <div *ngIf="countryCode.invalid && (countryCode.dirty || countryCode.touched)">
+                    <div class="text-danger m-auto" *ngIf="countryCode.errors.required">
+                        country code is required!
+                    </div>
+                </div>
+                <div *ngIf="number.invalid && (number.dirty || number.touched)">
+                    <div class="text-danger m-auto" *ngIf="number.errors.required">
+                        mobile number is required!
+                    </div>
+                </div>
+
+                <button [disabled]="loginForm.form.invalid" (click)="sendOTP()"
+                    class="btn btn-primary mb-5 float-right mr-5 mt-2">Login <i
+                        class="fa fa-arrow-right ml-3"></i></button>
+            </form>
+
+            <form *ngIf="otpScreen" #otpForm="ngForm">
+                <div class="form-group col-sm-12">
+                    <input type="text" class="form-control" id="otp" placeholder="OTP"
+                        [ngClass]="(otp.invalid && (otp.dirty || otp.touched)) ? 'invalid':'valid'" required name="otp"
+                        [(ngModel)]="otpEntered" #otp="ngModel">
+                </div>
+                <div *ngIf="otp.invalid && (otp.dirty || otp.touched)">
+                    <div class="text-danger float-left" *ngIf="otp.errors.required">
+                        otp is required!
+                    </div>
+                </div>
+                <button [disabled]="otpForm.form.invalid" (click)="verifyOtp()"
+                    class="btn btn-primary mb-5 float-right mr-5 mt-2">Verify OTP <i
+                        class="fa fa-arrow-right ml-3"></i></button>
+            </form>
+
+            <form *ngIf="nameScreen" #nameForm="ngForm">
+                <div class="form-group col-sm-12">
+                    <img [src]="userDetails['ProfilePic'] ? url + '/' + userDetails['ProfilePic'] : userPic"
+                        class="rounded-circle mb-3" width="100" height="100">
+                    <input type="text" class="form-control d-block" id="username" placeholder="Name"
+                        [ngClass]="(username.invalid && (username.dirty || username.touched)) ? 'invalid':'valid'"
+                        required name="username" [(ngModel)]="userDetails['Name']" #username="ngModel">
+
+                </div>
+                <div *ngIf="username.invalid && (username.dirty || username.touched)">
+                    <div class="text-danger float-left" *ngIf="username.errors.required">
+                        name is required!
+                    </div>
+                </div>
+                <button [disabled]="nameForm.form.invalid" (click)="updateName()"
+                    class="btn btn-primary  float-right mr-5 mb-5 mt-2">Chat <i
+                        class="fa fa-arrow-right ml-3"></i></button>
+            </form>
+        </div>
+        <button id="openModal" [hidden]="true" data-toggle="modal" data-target="#TenantModalCenter">Open Modal</button>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-lg" id="TenantModalCenter" tabindex="-1" role="dialog"
+    aria-labelledby="contactsModalCenterTitle" aria-hidden="true">
+    <span class="text-white fa fa-times popCloseImg c-pointer" data-dismiss="modal"></span>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h6 class="text-center">Select an organization which you want to login</h6>
+                <div class="tenantList" data-dismiss="modal" *ngFor="let tenant of tenants" (click)="selectTenant(tenant)">
+                    {{tenant.companyName}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
