@@ -4,7 +4,6 @@ import { CurrentUserService } from './currentuser.service';
 import * as CryptoJS from 'crypto-js';
 import { Subject, Observable } from 'rxjs';
 import { HttpService } from './http.service';
-import { constantApis } from '../constant/constantapis';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
@@ -16,18 +15,10 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   providedIn: 'root'
 })
 export class SocketService {
-  online$: Subject<any> = new Subject<any>();
   qrMultiTenant$: Subject<any> = new Subject<any>();
-  profileChange$: Subject<void> = new Subject<void>();
-  qrSocket: any;
   socket: any;
   user: any = {};
-  qrData: any = {};
   url: string = '';
-  chatData: any = {};
-  prod: boolean = environment.production;
-  userPic: string = constantMessages.userPic;
-  groupPic: string = constantMessages.groupPic;
   isEncryption: number = 0;
   isValidated: boolean = false;
   tenantId: string;
@@ -39,11 +30,6 @@ export class SocketService {
     this.tenantId = this.user && this.user['activeTenant'] && this.user['activeTenant']._id || ''
     this.url = environment.url;
   }
-
-  public profileChange(): Observable<void> {
-    return this.profileChange$.asObservable();
-  }
-
   userConnect(): void {
     if (typeof this.socket != 'undefined')
       this.socket.close();
@@ -57,7 +43,7 @@ export class SocketService {
       // this._http.loginCall(constantApis.socketConnect, 'post', {userId: this.user['_id'],tenantId:  this.tenantId}).then(res => {
       //   console.log(new Date(), "success socket api call", res)
       this.isEncryption = this.user['isEncryption'];
-      this.socket = io(environment.url + '/user?type=web&userId=' + this.user['_id'] + '&name=' + this.user['name'] + '&tenantId=' + this.tenantId, {
+      this.socket = io(this.url + '/user?type=web&userId=' + this.user['_id'] + '&name=' + this.user['name'] + '&tenantId=' + this.tenantId, {
         forceNew: false,
         'reconnection delay': 3000,
         'reconnection limit': 100,
@@ -74,6 +60,7 @@ export class SocketService {
     }
     if (typeof this.socket != 'undefined') {
       this.socket.on('*', eventData => {
+        console.log(eventData, "mmm")
         let event: string = eventData.data[0]
         let data: any = eventData.data[1]
         if (this.isEncryption == 1 && !this.withoutAuthEvent.includes(event))
@@ -87,6 +74,7 @@ export class SocketService {
         else if (event == 'unauthenticated' || event == 'exitTenant')
           this.unauthenticated(data)
       })
+      this.socket.on('verifyUser', data=> {console.log('ppp')})
       this.socket.on('connect', () => {
         console.log(new Date(), "Socket Connected")
         if (typeof this.user != 'undefined' && typeof this.user['_id'] != 'undefined') {
@@ -101,6 +89,7 @@ export class SocketService {
             event = 'verifyUser';
             verifyObj['tenantId'] = this.tenantId
           }
+          console.log(verifyObj)
           this.emit(event, verifyObj)
         }
       });
@@ -153,6 +142,7 @@ export class SocketService {
       if (event == 'verifyUser' || event == 'verifyGuest' || this.isValidated) {
         if (this.isEncryption == 1 && !this.withoutAuthEvent.includes(event))
           data = this.encryption(this.user['token'], data)
+          console.log(event, "l")
         this.socket.emit(event, data);
       }
     } else {
@@ -165,6 +155,7 @@ export class SocketService {
       if (this.isValidated) {
         if (this.isEncryption == 1 && !this.withoutAuthEvent.includes(event))
           data = this.encryption(this.user['token'], data)
+          console.log("3")
         this.socket.emit(event, data, callbackData => {
           callback(callbackData)
         });

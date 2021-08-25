@@ -37,9 +37,7 @@ import { AuthGuard } from './guards/auth.guard';
     BrowserAnimationsModule,
     ToastrModule.forRoot({ preventDuplicates: true}),
     CookieModule.forRoot(),
-    ReactiveFormsModule,
-    DeviceDetectorService,
-    
+    ReactiveFormsModule 
   ],
   providers: [
     AuthGuard,
